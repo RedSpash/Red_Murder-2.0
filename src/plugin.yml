@@ -1,0 +1,10 @@
+name: Red_Murder
+api-version: 1.8
+version: 1.0
+authors: [Red_Spash]
+main: fr.Red_Murder.Main
+description: §cMurder §6par §6§lRed_Spash#5918
+commands:
+  start:
+  addspawn:
+
