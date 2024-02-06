@@ -1,10 +1,12 @@
 name: Red_Murder
-api-version: 1.8
+api-version: 1.13
 version: 1.0
 authors: [Red_Spash]
-main: fr.Red_Murder.Main
-description: §cMurder §6par §6§lRed_Spash#5918
+main: fr.red_spash.murder.Murder
+description: §cMurder §6par §6§l@Red_Spash
 commands:
+  editWorld:
+  spawns:
+  saveWorld:
   start:
-  addspawn:
 
