@@ -1,5 +1,5 @@
 name: Red_Murder
-api-version: 1.13
+api-version: "1.20"
 version: 1.0
 authors: [Red_Spash]
 main: fr.red_spash.murder.Murder
@@ -9,4 +9,5 @@ commands:
   spawns:
   saveWorld:
   start:
+  teleportTo:
 
