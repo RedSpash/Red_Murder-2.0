@@ -20,7 +20,7 @@ public class StartGame implements CommandExecutor {
         if(commandSender.isOp()){
             GameMap findedGameMap = null;
             for(GameMap gameMap : this.gameManager.getMapManager().getMaps()){
-                if(gameMap.getName().equalsIgnoreCase("amarantemap")){
+                if(gameMap.getName().equalsIgnoreCase("amarante")){
                     findedGameMap = gameMap;
                     break;
                 }

@@ -3,6 +3,7 @@ package fr.red_spash.murder.commands;
 import fr.red_spash.murder.maps.GameMap;
 import fr.red_spash.murder.maps.MapManager;
 import fr.red_spash.murder.utils.Utils;
+import fr.red_spash.murder.world.EmptyChunkGenerator;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -37,46 +38,58 @@ public class EditWorld implements CommandExecutor, TabCompleter {
             commandSender.sendMessage("§c/editworld <nom du monde>");
             return true;
         }
+        String name = strings[0];
+        if(!name.equals("void")){
+            ArrayList<String> completer = new ArrayList<>();
+            MapManager manager = this.mapManager;
+            for(GameMap gameMap : manager.getMaps()){
+                completer.add(gameMap.getFile().getName());
+            }
 
-        ArrayList<String> completer = new ArrayList<>();
-        MapManager manager = this.mapManager;
-        for(GameMap gameMap : manager.getMaps()){
-            completer.add(gameMap.getFile().getName());
+            for(File file : manager.getInvalidMaps()){
+                completer.add(file.getName());
+            }
+            StringBuilder stringBuilder1 = new StringBuilder();
+            for(String ss : strings){
+                stringBuilder1.append(ss).append(" ");
+            }
+            StringBuilder stringBuilder = new StringBuilder(stringBuilder1.substring(0, stringBuilder1.length() - 1));
+            if(!completer.contains(stringBuilder.toString())){
+                commandSender.sendMessage("§cCarte introuvable !");
+                return true;
+            }
+            name = stringBuilder.toString();
         }
 
-        for(File file : manager.getInvalidMaps()){
-            completer.add(file.getName());
-        }
-        StringBuilder name = new StringBuilder();
-        for(String ss : strings){
-            name.append(ss).append(" ");
-        }
-        name = new StringBuilder(name.substring(0, name.length() - 1));
-        if(!completer.contains(name.toString())){
-            commandSender.sendMessage("§cCarte introuvable !");
-            return true;
-        }
 
         for(World world : editingWorld){
-            if(world.getName().equalsIgnoreCase(name.toString())){
+            if(world.getName().equalsIgnoreCase(name)){
                 p.sendMessage("§cImpossible de charger un monde avec le nom '"+name+"' car un monde a déjà ce nom !");
                 p.teleport(world.getSpawnLocation());
                 return true;
             }
         }
 
-        File mapsFolder = new File(this.main.getDataFolder(), "maps/"+name);
-        String pathName = name.toString();
-        Path path2 = Paths.get(pathName);
+        if(!name.equals("void")){
+            File mapsFolder = new File(this.main.getDataFolder(), "maps/"+name);
+            String pathName = name;
+            Path path2 = Paths.get(pathName);
 
-        Utils.copyDirectory(mapsFolder.getPath(), path2.toString());
+            Utils.copyDirectory(mapsFolder.getPath(), path2.toString());
+        }
 
-        World world = Bukkit.createWorld(new WorldCreator(name.toString()));
+        WorldCreator creator = new WorldCreator(name);
+        creator.generator(new EmptyChunkGenerator());
+        World world = creator.createWorld();
+
         if(world == null){
-            world = Bukkit.getWorld(name.toString());
+            world = Bukkit.getWorld(name);
         }
 
         Location spawnLocation = world.getSpawnLocation();
+        if(spawnLocation.getY() >= 200){
+            spawnLocation.setY(100);
+        }
         File configurationFile = new File(this.main.getDataFolder(),"maps/"+name+"/config.yml");
         if(configurationFile.exists()){
             FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(configurationFile);
