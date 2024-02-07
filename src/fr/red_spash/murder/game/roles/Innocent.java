@@ -3,7 +3,18 @@ package fr.red_spash.murder.game.roles;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-public class Innocent implements Role{
+public class Innocent extends Role{
+
+    private boolean infiniteBow = false;
+
+    public void setInfiniteBow(boolean infiniteBow) {
+        this.infiniteBow = infiniteBow;
+    }
+
+    public boolean isInfiniteBow() {
+        return infiniteBow;
+    }
+
     @Override
     public String getRoleColor() {
         return "§a";
@@ -25,12 +36,8 @@ public class Innocent implements Role{
     }
 
     @Override
-    public void giveItems(Player p) {
-
-    }
-
-    @Override
     public Sound getSound() {
         return Sound.ENTITY_ILLUSIONER_MIRROR_MOVE;
     }
+
 }

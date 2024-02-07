@@ -3,7 +3,18 @@ package fr.red_spash.murder.game.roles;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-public class Schizophrenic implements Role{
+public class Schizophrenic extends Role{
+
+    private Role subRole;
+
+    public void setSubRole(Role subRole) {
+        this.subRole = subRole;
+    }
+
+    public boolean hasRole(){
+        return this.subRole != null;
+    }
+
     @Override
     public String getRoleColor() {
         return "§4";
@@ -32,5 +43,14 @@ public class Schizophrenic implements Role{
     @Override
     public void giveItems(Player p) {
 
+    }
+
+    @Override
+    public boolean isMurder() {
+        return this.hasRole() && this.subRole instanceof Murder;
+    }
+
+    public Role getSubRole() {
+        return this.subRole;
     }
 }

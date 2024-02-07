@@ -6,14 +6,15 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class Detective implements Role{
+public class Detective extends Role{
 
     public static final ItemStack DETECTIVE_BOW = new ItemStackBuilder(Material.BOW)
             .setName("§6Arc du détective")
             .setLore("§7Protégez les innocents","§7et démasquez le meutrier!")
             .setUnbreakable(true)
             .toItemStack();
-    public static final int SLOT_ARROW = 30;
+    public static final int SLOT_ARROW = 9;
+    public static final int SLOT_BOW = 4;
 
     @Override
     public String getRoleColor() {
@@ -38,7 +39,7 @@ public class Detective implements Role{
     @Override
     public void giveItems(Player p) {
         p.getInventory().setHeldItemSlot(3);
-        p.getInventory().setItem(4,DETECTIVE_BOW);
+        p.getInventory().setItem(SLOT_BOW,DETECTIVE_BOW);
         p.getInventory().setItem(SLOT_ARROW,new ItemStack(Material.ARROW));
     }
 
@@ -46,4 +47,5 @@ public class Detective implements Role{
     public Sound getSound() {
         return Sound.ENTITY_PLAYER_LEVELUP;
     }
+
 }
