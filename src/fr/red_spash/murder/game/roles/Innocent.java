@@ -1,7 +1,6 @@
 package fr.red_spash.murder.game.roles;
 
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 
 public class Innocent extends Role{
 

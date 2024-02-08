@@ -3,7 +3,6 @@ package fr.red_spash.murder.game.roles;
 import fr.red_spash.murder.utils.ItemStackBuilder;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -52,7 +51,7 @@ public class Murder extends Role{
 
     @Override
     public String getDescription() {
-        return " En incarnant le rôle unique de schizophrène, vous vous trouvez dans une position intrigante où vous pouvez être soit innocent, soit meurtrier, avec une chance égale pour les deux. Cette dualité ajoute une complexité stratégique au jeu, car les autres participants doivent naviguer avec prudence, ne sachant pas clairement de quel côté vous vous trouvez.";
+        return " En tant que meurtrier, votre mission consiste à éliminer secrètement les autres joueurs sans attirer l'attention, nécessitant une stratégie subtile pour choisir le bon moment et la bonne méthode tout en évitant d'être découvert.";
     }
 
     @Override

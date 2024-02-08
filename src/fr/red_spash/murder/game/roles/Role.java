@@ -1,7 +1,5 @@
 package fr.red_spash.murder.game.roles;
 
-import fr.red_spash.murder.players.PlayerManager;
-import fr.red_spash.murder.utils.ItemStackBuilder;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

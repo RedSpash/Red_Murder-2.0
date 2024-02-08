@@ -1,7 +1,6 @@
 package fr.red_spash.murder.game.roles;
 
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 
 public class Schizophrenic extends Role{
 
@@ -38,11 +37,6 @@ public class Schizophrenic extends Role{
     @Override
     public Sound getSound() {
         return Sound.ENTITY_VINDICATOR_HURT;
-    }
-
-    @Override
-    public void giveItems(Player p) {
-
     }
 
     @Override
