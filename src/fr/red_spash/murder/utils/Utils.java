@@ -1,5 +1,6 @@
 package fr.red_spash.murder.utils;
 
+import fr.red_spash.murder.Murder;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -12,14 +13,18 @@ import java.nio.file.Paths;
 
 public class Utils {
 
-    public static int random_number(Integer min, Integer max){
+    private Utils(){
+
+    }
+
+    public static int generateRandomNumber(Integer min, Integer max){
         max = max +1;
         return (int) (Math.random()*(max-min)) + min;
     }
 
     public static void teleportPlayersAndRemoveWorld(World world, boolean save) {
         for(Player p : world.getPlayers()){
-            p.teleport(Bukkit.getWorld("world").getSpawnLocation());
+            p.teleport(Murder.SPAWN);
             p.sendMessage("§cLe monde vient d'être détruit! Vous êtes désormais au spawn.");
         }
         Bukkit.unloadWorld(world,save);
@@ -72,10 +77,4 @@ public class Utils {
         int scale = (int) Math.pow(10, precision);
         return (double) Math.round(value * scale) / scale;
     }
-
-    public static int randomNumber(Integer min, Integer max){
-        max = max +1;
-        return (int) (Math.random()*(max-min)) + min;
-    }
-
 }
