@@ -1,20 +1,12 @@
 package fr.red_spash.murder.players;
 
 import fr.red_spash.murder.game.roles.Role;
-import fr.red_spash.murder.game.roles.Schizophrenic;
+import fr.red_spash.murder.game.roles.concrete_roles.Schizophrenic;
 import fr.red_spash.murder.game.scoreboard.RedScoreBoard;
 import fr.red_spash.murder.game.tasks.CooldownTask;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.Vector;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 
@@ -62,10 +54,14 @@ public class PlayerData {
         return isSpectator;
     }
 
-    public Role getRole() {
+    public Role getVisualRole() {
         if(role instanceof Schizophrenic schizophrenic && (schizophrenic.getSubRole() != null)){
             return schizophrenic.getSubRole();
         }
+        return role;
+    }
+
+    public Role getTrueRole(){
         return role;
     }
 
