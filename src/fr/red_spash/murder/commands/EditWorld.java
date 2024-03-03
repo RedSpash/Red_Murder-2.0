@@ -33,7 +33,8 @@ public class EditWorld implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if(!(commandSender instanceof Player p))return true;
+        if(!(commandSender instanceof Player p))return false;
+        if(!(p.isOp()))return false;
         if(strings.length == 0){
             commandSender.sendMessage("§c/editworld <nom du monde>");
             return true;
@@ -72,8 +73,7 @@ public class EditWorld implements CommandExecutor, TabCompleter {
 
         if(!name.equals("void")){
             File mapsFolder = new File(this.main.getDataFolder(), "maps/"+name);
-            String pathName = name;
-            Path path2 = Paths.get(pathName);
+            Path path2 = Paths.get(name);
 
             Utils.copyDirectory(mapsFolder.getPath(), path2.toString());
         }
@@ -86,28 +86,10 @@ public class EditWorld implements CommandExecutor, TabCompleter {
             world = Bukkit.getWorld(name);
         }
 
-        Location spawnLocation = world.getSpawnLocation();
-        if(spawnLocation.getY() >= 200){
-            spawnLocation.setY(100);
-        }
-        File configurationFile = new File(this.main.getDataFolder(),"maps/"+name+"/config.yml");
-        if(configurationFile.exists()){
-            FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(configurationFile);
+        world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+        world.setGameRule(GameRule.DO_FIRE_TICK, false);
 
-            String path = "spawnlocation";
-            boolean spawn = fileConfiguration.isSet(path);
-            if(spawn){
-                spawnLocation = new Location(
-                        world,
-                        fileConfiguration.getDouble(path+".x",0.0),
-                        fileConfiguration.getDouble(path+".y",101.5),
-                        fileConfiguration.getDouble(path+".z",0.0),
-                        fileConfiguration.getInt(path+".yaw",0),
-                        fileConfiguration.getInt(path+".pitch",0)
-                );
-            }
-
-        }
+        Location spawnLocation = this.mapManager.getSpawnLocation(world, this.main.getDataFolder()+"/maps/name/");
 
         p.teleport(spawnLocation);
 
@@ -117,6 +99,8 @@ public class EditWorld implements CommandExecutor, TabCompleter {
 
         return true;
     }
+
+
 
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
@@ -142,6 +126,7 @@ public class EditWorld implements CommandExecutor, TabCompleter {
 
     public void deleteAllWorlds() {
         for(World world : this.editingWorld){
+            Utils.teleportPlayersAndRemoveWorld(world,false);
             Utils.deleteWorldFiles(world.getWorldFolder());
         }
     }

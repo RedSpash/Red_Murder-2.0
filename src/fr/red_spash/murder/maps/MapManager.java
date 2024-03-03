@@ -1,13 +1,13 @@
 package fr.red_spash.murder.maps;
 
 import fr.red_spash.murder.Murder;
-import org.apache.commons.lang.ArrayUtils;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -65,6 +65,34 @@ public class MapManager {
             }
         }
     }
+
+    public Location getSpawnLocation(World world, String fileLocation) {
+        Location spawnLocation = world.getSpawnLocation();
+        if(spawnLocation.getY() >= 200){
+            spawnLocation.setY(100);
+        }
+
+        File configurationFile = new File(fileLocation,"config.yml");
+        if(configurationFile.exists()){
+            FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(configurationFile);
+
+            String path = "spawnlocation";
+            boolean spawn = fileConfiguration.isSet(path);
+            if(spawn){
+                spawnLocation = new Location(
+                        world,
+                        fileConfiguration.getDouble(path+".x",0.0),
+                        fileConfiguration.getDouble(path+".y",101.5),
+                        fileConfiguration.getDouble(path+".z",0.0),
+                        fileConfiguration.getInt(path+".yaw",0),
+                        fileConfiguration.getInt(path+".pitch",0)
+                );
+            }
+        }
+
+        return spawnLocation;
+    }
+
     private void invalidateMap(File directory) {
         getLogger().warning("La map suivante est invalide : " + directory.toString());
         this.invalidMaps.add(directory);

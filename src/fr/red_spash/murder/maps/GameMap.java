@@ -1,6 +1,7 @@
 package fr.red_spash.murder.maps;
 
 import fr.red_spash.murder.utils.Utils;
+import fr.red_spash.murder.world.EmptyChunkGenerator;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -10,7 +11,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameMap implements Cloneable{
+public class GameMap{
     private Location spawnLocation;
     private final String name;
     private final File file;
@@ -31,9 +32,9 @@ public class GameMap implements Cloneable{
         this.spawnLocation = this.getConfigurationLocation("spawnlocation");
 
         if(this.fileConfiguration.isSet("spawns")){
-            this.fileConfiguration.getConfigurationSection("spawns").getKeys(false).forEach(spawnId ->{
-                this.spawnsLocation.add(this.getConfigurationLocation("spawns."+spawnId));
-            });
+            this.fileConfiguration.getConfigurationSection("spawns").getKeys(false).forEach(spawnId ->
+                this.spawnsLocation.add(this.getConfigurationLocation("spawns."+spawnId))
+            );
         }
     }
 
@@ -65,6 +66,7 @@ public class GameMap implements Cloneable{
         if(world != null){
             Utils.teleportPlayersAndRemoveWorld(world,false);
             Utils.deleteWorldFiles(world.getWorldFolder());
+            this.world = null;
         }else{
             Bukkit.broadcastMessage("§cMonde introuvable !");
         }
@@ -78,7 +80,9 @@ public class GameMap implements Cloneable{
 
         Utils.copyDirectory(path.toString(), path2.toString());
 
-        this.world = Bukkit.createWorld(new WorldCreator(pathName));
+        WorldCreator creator = new WorldCreator(pathName);
+        creator.generator(new EmptyChunkGenerator());
+        this.world = creator.createWorld();
         if(world == null){
             world = Bukkit.getWorld(pathName);
         }else{
@@ -109,16 +113,5 @@ public class GameMap implements Cloneable{
 
     public List<Location> getSpawnsLocation() {
         return spawnsLocation;
-    }
-
-    @Override
-    public GameMap clone() {
-        try {
-            GameMap clone = (GameMap) super.clone();
-            // TODO: copy mutable state here, so the clone can't change the internals of the original
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
     }
 }

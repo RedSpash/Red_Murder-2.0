@@ -28,6 +28,7 @@ public class SaveWorld implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if(commandSender instanceof Player p){
+            if(!(p.isOp()))return false;
 
             if(strings.length != 1){
                 p.sendMessage("§c/saveworld <nom du monde>");
