@@ -1,8 +1,8 @@
 package fr.red_spash.murder.commands;
 
-import fr.red_spash.murder.event.BowOnGroundListener;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import fr.red_spash.murder.tasks.SpawnShowTask;
-import fr.red_spash.murder.maps.MapManager;
 import fr.red_spash.murder.utils.Utils;
 import org.bukkit.*;
 import org.bukkit.command.Command;
@@ -23,19 +23,18 @@ public class Spawns implements CommandExecutor, TabCompleter {
 
     private final JavaPlugin main;
     private final EditWorld editWorld;
-    private final MapManager mapManager;
     private final HashMap<UUID, SpawnShowTask> spawnsShows;
 
-    public Spawns(JavaPlugin main, MapManager mapManager, EditWorld editWorld) {
+    public Spawns(JavaPlugin main, EditWorld editWorld) {
         this.main = main;
         this.editWorld = editWorld;
-        this.mapManager = mapManager;
-        spawnsShows = new HashMap<UUID, SpawnShowTask>();
+        spawnsShows = new HashMap<>();
     }
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if(!(commandSender instanceof Player p))return true;
+        if(!(commandSender instanceof Player p))return false;
+        if(!(p.isOp()))return false;
         if(strings.length == 0){
             commandSender.sendMessage("§c/spawns <add|delete|list|setmainspawn|shows>");
             return true;
@@ -47,19 +46,19 @@ public class Spawns implements CommandExecutor, TabCompleter {
         }
 
         FileConfiguration fileConfiguration = this.getFileConfigurationOfWorld(p.getWorld());
-
+        String spawnsPath = "spawns";
         switch (strings[0].toLowerCase()){
             case "add"->{
                 int lastId = 0;
 
-                if(fileConfiguration.isSet("spawns")){
-                    ArrayList<String> elements = new ArrayList<>(fileConfiguration.getConfigurationSection("spawns").getKeys(false));
+                if(fileConfiguration.isSet(spawnsPath)){
+                    ArrayList<String> elements = new ArrayList<>(fileConfiguration.getConfigurationSection(spawnsPath).getKeys(false));
                     if(!elements.isEmpty()){
                         lastId = Integer.parseInt(elements.get(elements.size()-1))+1;
                     }
                 }
 
-                String keyPath = "spawns.";
+                String keyPath = spawnsPath+".";
                 fileConfiguration.set(keyPath +lastId+".x",p.getLocation().getX());
                 fileConfiguration.set(keyPath +lastId+".y",p.getLocation().getY());
                 fileConfiguration.set(keyPath +lastId+".z",p.getLocation().getZ());
@@ -73,7 +72,7 @@ public class Spawns implements CommandExecutor, TabCompleter {
             case "delete","remove"->{
 
                 HashMap<Location,String> spawnsLocation = new HashMap<>();
-                fileConfiguration.getConfigurationSection("spawns").getKeys(false).forEach(spawnId ->{
+                fileConfiguration.getConfigurationSection(spawnsPath).getKeys(false).forEach(spawnId ->{
                     String path = "spawns."+spawnId;
                     spawnsLocation.put(new Location(
                             p.getWorld(),
@@ -105,10 +104,6 @@ public class Spawns implements CommandExecutor, TabCompleter {
                     String spawnId = spawnsLocation.get(nearbyLocation);
                     String path = "spawns."+spawnId;
                     fileConfiguration.set(path,null);
-                    // fileConfiguration.set(path+".y",null);
-                    // fileConfiguration.set(path+".z",null);
-                    // fileConfiguration.set(path+".yaw",null);
-                    // fileConfiguration.set(path+".pitch",null);
 
                     this.saveFileConfiguration(p.getWorld(), fileConfiguration);
                     p.sendMessage("§aLe spawn n°"+spawnId+" vient d'être retiré !");
@@ -119,10 +114,10 @@ public class Spawns implements CommandExecutor, TabCompleter {
             case "list"->{
                 StringBuilder message = new StringBuilder("§a§lListe des spawns de votre monde:\n");
 
-                ArrayList<String> spawnIds = new ArrayList<>(fileConfiguration.getConfigurationSection("spawns").getKeys(false));
+                ArrayList<String> spawnIds = new ArrayList<>(fileConfiguration.getConfigurationSection(spawnsPath).getKeys(false));
 
                 for(String spawnId : spawnIds){
-                    String path = "spawns."+spawnId;
+                    String path = spawnsPath+"."+spawnId;
                     Location location = new Location(
                                     p.getWorld(),
                                     fileConfiguration.getDouble(path+".x",0.0),
@@ -171,7 +166,9 @@ public class Spawns implements CommandExecutor, TabCompleter {
                     runnable.setBukkitTask(bukkitTask);
                     p.sendMessage("§aVous voyez désormais les spawns!");
                 }
-            }
+            }default ->
+                p.sendMessage("§cSous-commande inconnue!");
+
         }
 
 

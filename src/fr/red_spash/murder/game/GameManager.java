@@ -1,21 +1,22 @@
 package fr.red_spash.murder.game;
 
 import fr.red_spash.murder.event.BowOnGroundListener;
-import fr.red_spash.murder.game.roles.Detective;
-import fr.red_spash.murder.game.roles.Innocent;
-import fr.red_spash.murder.game.roles.Murder;
-import fr.red_spash.murder.game.roles.Role;
+import fr.red_spash.murder.game.roles.*;
+import fr.red_spash.murder.game.roles.concrete_roles.*;
+import fr.red_spash.murder.game.scoreboard.ScoreboardLines;
+import fr.red_spash.murder.game.scoreboard.ScoreboardTask;
+import fr.red_spash.murder.game.tasks.EndGameTask;
 import fr.red_spash.murder.game.tasks.GameTimerTask;
+import fr.red_spash.murder.game.tasks.GoldTask;
 import fr.red_spash.murder.game.tasks.StartTimer;
 import fr.red_spash.murder.maps.GameMap;
 import fr.red_spash.murder.maps.MapManager;
-import fr.red_spash.murder.players.DeathManager;
 import fr.red_spash.murder.players.PlayerData;
 import fr.red_spash.murder.players.PlayerManager;
 import fr.red_spash.murder.utils.Utils;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
@@ -24,22 +25,26 @@ import java.util.Collections;
 public class GameManager {
 
     private final MapManager mapManager;
-    private final Plugin main;
+    private final JavaPlugin main;
     private final PlayerManager playerManager;
     private final BowOnGroundListener bowOnGroundListener;
-    private final DeathManager deathManager;
     private GameMap actualMap;
     private GameTimerTask gameTimer;
     private GameState gameState;
+    private EndGameTask endGameTask;
+    private final ScoreboardLines scoreboardLines;
+    private GoldTask goldTask;
 
-    public GameManager(Plugin main, MapManager mapManager, PlayerManager playerManager, BowOnGroundListener bowOnGroundListener, DeathManager deathManager) {
+    public GameManager(JavaPlugin main, MapManager mapManager, PlayerManager playerManager, BowOnGroundListener bowOnGroundListener) {
         this.mapManager = mapManager;
         this.main = main;
         this.playerManager = playerManager;
         this.bowOnGroundListener = bowOnGroundListener;
+        this.scoreboardLines = new ScoreboardLines(this);
         this.actualMap = null;
-        this.deathManager = deathManager;
         this.gameState = GameState.WAITING;
+
+        Bukkit.getServer().getScheduler().runTaskTimer(this.main, new ScoreboardTask(playerManager, this.scoreboardLines), 0, 20);
     }
 
     public void startPreGame(GameMap gameMap){
@@ -48,10 +53,12 @@ public class GameManager {
             Bukkit.broadcastMessage("§c§lImpossible de démarrer le murder avec le carte "+gameMap.getName());
             return;
         }
+        world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
+        world.setTime(Utils.generateRandomNumber(0,24000));
         this.actualMap = gameMap;
         for(Player p : Bukkit.getOnlinePlayers()){
             p.teleport(gameMap.getSpawnLocation());
-            p.sendTitle("§a"+gameMap.getName(),"§eLe murder va commencer...",10,20*3,20);
+            p.sendTitle("§a"+gameMap.getName(),"§eLe murder va commencer...",10,20*5,20);
             p.playSound(p.getLocation(), Sound.BLOCK_SHULKER_BOX_OPEN,1,2);
             p.setGameMode(GameMode.ADVENTURE);
         }
@@ -68,8 +75,16 @@ public class GameManager {
 
     public void startGame() {
         ArrayList<Role> roles = new ArrayList<>();
+        //roles.add(new Ancient());
+        //roles.add(new Murder());
+        //roles.add(new Detective());
+        //roles.add(new Schizophrenic());
+        //roles.add(new Electrician());
+        //roles.add(new Lucky());
+        //roles.add(new Spy());
         roles.add(new Murder());
-        roles.add(new Detective());
+        roles.add(new Electrician());
+
 
         while (roles.size() < Bukkit.getOnlinePlayers().size()){
             roles.add(new Innocent());
@@ -87,17 +102,22 @@ public class GameManager {
             if(spawns.isEmpty()){
                 spawns = new ArrayList<>(this.actualMap.getSpawnsLocation());
             }
+            p.setPlayerListName(ScoreboardLines.REPLACED_NAME_ANONYMOUS);
+            for(Player pl : Bukkit.getOnlinePlayers()){
+                p.showPlayer(pl);
+            }
         }
 
-        this.gameTimer = new GameTimerTask(this, this.main);
+        this.gameTimer = new GameTimerTask(this, this.main, this.scoreboardLines);
         this.gameState = GameState.IN_GAME;
+        this.goldTask = new GoldTask(this, this.main);
     }
 
     public void checkEnd(){
         int murderRemainings = 0;
         int alive = 0;
         for(PlayerData playerData: this.playerManager.getAllPlayerData()){
-            Role role = playerData.getRole();
+            Role role = playerData.getVisualRole();
             if(role != null && !playerData.isSpectator()){
                 if(role.isMurder()){
                     murderRemainings = murderRemainings + 1;
@@ -107,26 +127,35 @@ public class GameManager {
         }
 
         if(murderRemainings == alive){
-            Bukkit.broadcastMessage("murders");
-            this.stopGame();
+            this.stopGame(new Murder());
         } else if (murderRemainings == 0) {
-            Bukkit.broadcastMessage("innocents");
-            this.stopGame();
+            this.stopGame(new Innocent());
         }
     }
 
-    public void stopGame() {
-        this.gameState = GameState.END_GAME;
-        this.actualMap.deleteWorld();
-        this.gameTimer.stop();
-        this.playerManager.resetData();
-        this.playerManager.resetPlayers();
-        this.bowOnGroundListener.clearBowsLocations();
-        this.gameState = GameState.WAITING;
+    public void stopGame(){
+        this.stopGame(null);
     }
 
-    public DeathManager getDeathManager() {
-        return deathManager;
+    public void stopGame(Role winnerRole) {
+        this.goldTask.stop();
+        this.gameState = GameState.END_GAME;
+        this.gameTimer.stop();
+        this.playerManager.resetPlayers();
+        this.bowOnGroundListener.clearBowsLocations();
+        this.playerManager.resetCooldowns();
+        this.endGameTask = new EndGameTask(this, winnerRole, this.main);
+        this.playerManager.resetData();
+    }
+
+    public void resetGame(){
+        if(this.endGameTask != null){
+            this.endGameTask.stop();
+        }
+        this.actualMap.deleteWorld();
+        this.bowOnGroundListener.clearBowsLocations();
+        this.playerManager.resetPlayers();
+        this.gameState = GameState.WAITING;
     }
 
     public PlayerManager getPlayerManager() {
@@ -149,12 +178,16 @@ public class GameManager {
         int amount = 0;
         for(PlayerData playerData : this.playerManager.getAllPlayerData()){
             if(!playerData.isSpectator()){
-                Role role = playerData.getRole();
+                Role role = playerData.getVisualRole();
                 if(role != null && !role.isMurder()){
                     amount = amount + 1;
                 }
             }
         }
         return amount;
+    }
+
+    public GameMap getActualMap() {
+        return actualMap;
     }
 }
