@@ -1,8 +1,11 @@
-package fr.red_spash.murder.game.roles;
+package fr.red_spash.murder.game.roles.concrete_roles;
 
+import fr.red_spash.murder.game.roles.Role;
 import org.bukkit.Sound;
 
-public class Innocent extends Role{
+import java.awt.*;
+
+public class Innocent extends Role {
 
     private boolean infiniteBow = false;
 
@@ -15,8 +18,13 @@ public class Innocent extends Role{
     }
 
     @Override
-    public String getRoleColor() {
+    public String getMinecraftRoleColor() {
         return "§a";
+    }
+
+    @Override
+    public Color getRoleColor() {
+        return new Color(106, 255, 0);
     }
 
     @Override

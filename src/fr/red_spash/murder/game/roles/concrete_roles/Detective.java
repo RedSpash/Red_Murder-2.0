@@ -1,12 +1,15 @@
-package fr.red_spash.murder.game.roles;
+package fr.red_spash.murder.game.roles.concrete_roles;
 
+import fr.red_spash.murder.game.roles.Role;
 import fr.red_spash.murder.utils.ItemStackBuilder;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class Detective extends Role{
+import java.awt.*;
+
+public class Detective extends Role {
 
     public static final ItemStack DETECTIVE_BOW = new ItemStackBuilder(Material.BOW)
             .setName("§6Arc du détective")
@@ -17,8 +20,13 @@ public class Detective extends Role{
     public static final int SLOT_BOW = 4;
 
     @Override
-    public String getRoleColor() {
+    public String getMinecraftRoleColor() {
         return "§6";
+    }
+
+    @Override
+    public Color getRoleColor() {
+        return new Color(255, 170, 0);
     }
 
     @Override

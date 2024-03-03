@@ -1,16 +1,21 @@
-package fr.red_spash.murder.game.roles;
+package fr.red_spash.murder.game.roles.concrete_roles;
 
+import fr.red_spash.murder.game.roles.Role;
 import fr.red_spash.murder.utils.ItemStackBuilder;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class Murder extends Role{
+import java.awt.*;
+
+public class Murder extends Role {
 
     public static final int MURDER_SWORD_SLOT = 4;
     private boolean dash = true;
+    private boolean throwSword = true;
     private Item swordOnGround;
     public static final ItemStack MURDER_SWORD = new ItemStackBuilder(Material.DIAMOND_SWORD)
             .setName("§cÉpée du Meurtrier")
@@ -34,9 +39,22 @@ public class Murder extends Role{
         return swordOnGround;
     }
 
+    public void setThrowSword(boolean throwSword) {
+        this.throwSword = throwSword;
+    }
+
+    public boolean canThrowSword() {
+        return throwSword;
+    }
+
     @Override
-    public String getRoleColor() {
+    public String getMinecraftRoleColor() {
         return "§c";
+    }
+
+    @Override
+    public Color getRoleColor() {
+        return new Color(255,0,0);
     }
 
     @Override
@@ -51,7 +69,7 @@ public class Murder extends Role{
 
     @Override
     public String getDescription() {
-        return " En tant que meurtrier, votre mission consiste à éliminer secrètement les autres joueurs sans attirer l'attention, nécessitant une stratégie subtile pour choisir le bon moment et la bonne méthode tout en évitant d'être découvert.";
+        return "En tant que meurtrier, votre mission consiste à éliminer secrètement les autres joueurs sans attirer l'attention, nécessitant une stratégie subtile pour choisir le bon moment et la bonne méthode tout en évitant d'être découvert.";
     }
 
     @Override
@@ -69,4 +87,5 @@ public class Murder extends Role{
     public boolean isMurder() {
         return true;
     }
+
 }
