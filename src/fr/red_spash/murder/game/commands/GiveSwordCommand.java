@@ -1,6 +1,6 @@
 package fr.red_spash.murder.game.commands;
 
-import fr.red_spash.murder.game.roles.Murder;
+import fr.red_spash.murder.game.roles.concrete_roles.Murder;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Sound;
