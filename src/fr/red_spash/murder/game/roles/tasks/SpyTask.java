@@ -1,6 +1,7 @@
-package fr.red_spash.murder.game.tasks;
+package fr.red_spash.murder.game.roles.tasks;
 
 import fr.red_spash.murder.game.roles.concrete_roles.Spy;
+import fr.red_spash.murder.game.roles.listener.SpyListener;
 import fr.red_spash.murder.players.PlayerData;
 import fr.red_spash.murder.players.PlayerManager;
 import fr.red_spash.murder.utils.Utils;
@@ -15,9 +16,11 @@ import java.awt.*;
 public class SpyTask implements Runnable {
 
     private final PlayerManager playerManager;
+    private final SpyListener spyListener;
 
-    public SpyTask(PlayerManager playerManager){
+    public SpyTask(PlayerManager playerManager, SpyListener spyListener){
         this.playerManager = playerManager;
+        this.spyListener = spyListener;
     }
 
     @Override
@@ -32,14 +35,28 @@ public class SpyTask implements Runnable {
                     if(spy.getPower() <= 0){
                         p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§c§lVous n'avez plus d'invisibilité !"));
                         p.sendMessage("§c§lVous n'avez plus d'invisibilité !");
-                        spy.disableInvisibility(p);
+                        this.spyListener.disableInvisibility(p, spy);
                         p.getInventory().setItem(Spy.SPY_SLOT, null);
                     }else{
-                        String remaining = Utils.round(spy.getPower(),2)+"";
-                        if(remaining.split("\\.")[1].length() == 1){
-                            remaining = remaining + "0";
+                        StringBuilder actionBarMessage = new StringBuilder();
+                        double percentage = spy.getPower() * 100 / Spy.SPY_INVISIBILITY_TIME;
+
+                        for (int i = 1; i <= 50; i++) {
+                            String color = "§a";
+
+                            if (i * 2 <= percentage) {
+                                color = "§c";
+                            }
+
+                            actionBarMessage.insert(0, color + "|");
                         }
-                        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§c§lIl vous reste "+ remaining+" secondes!"));
+                        String seconds;
+                        if(spy.getPower() >= 10){
+                            seconds = Utils.ajouterZeros(Utils.round(spy.getPower(),2),5);
+                        }else{
+                            seconds = Utils.ajouterZeros(Utils.round(spy.getPower(),2),4);
+                        }
+                        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§c§lTemps restant: "+actionBarMessage+" §7("+seconds+" secondes)"));
                     }
                 }
 

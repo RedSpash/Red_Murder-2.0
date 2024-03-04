@@ -5,10 +5,12 @@ import fr.red_spash.murder.game.GameState;
 import fr.red_spash.murder.game.roles.*;
 import fr.red_spash.murder.game.roles.concrete_roles.Lucky;
 import fr.red_spash.murder.game.roles.concrete_roles.Murder;
+import fr.red_spash.murder.game.roles.concrete_roles.Vagabond;
 import fr.red_spash.murder.players.PlayerData;
 import fr.red_spash.murder.players.PlayerManager;
 import fr.red_spash.murder.utils.ItemStackBuilder;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Item;
@@ -19,9 +21,11 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.ItemMergeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class RolesListener implements Listener {
@@ -31,11 +35,36 @@ public class RolesListener implements Listener {
     private final HashMap<UUID, Long> cooldownInteractions;
     private final PlayerManager playerManager;
     private final GameManager gameManager;
+    private final List<GameActionListener> gamesListeners;
 
-    public RolesListener(GameManager gameManager){
+    public RolesListener(GameManager gameManager, List<GameActionListener> gamesListeners){
         this.playerManager = gameManager.getPlayerManager();
         this.gameManager = gameManager;
+        this.gamesListeners = gamesListeners;
         this.cooldownInteractions = new HashMap<>();
+
+    }
+
+    @EventHandler
+    public void playerMoveEvent(PlayerMoveEvent e){
+        if(e.getTo() == null)return;
+        if(e.getFrom().getBlock() == e.getTo().getBlock())return;
+
+        Player p = e.getPlayer();
+        PlayerData playerData = this.playerManager.getData(p);
+
+        if(playerData.isSpectator())return;
+        if(!(playerData.getVisualRole() instanceof Vagabond vagabond))return;
+
+        if(vagabond.getLastTeleportation() + 1000 * Vagabond.MOTIONLESS_TIME <= System.currentTimeMillis())return;
+
+        Location from = e.getFrom();
+        Location to = e.getTo();
+        if(from.getX() != to.getX()
+                || from.getY() != to.getY()
+                || from.getZ() != to.getZ()){
+            e.setCancelled(true);
+        }
     }
 
     @EventHandler
@@ -47,17 +76,17 @@ public class RolesListener implements Listener {
     public void entityPickupItemEvent(EntityPickupItemEvent e){
         if(!(e.getEntity() instanceof Player p))return;
         if(p.isOp() && p.getGameMode() == GameMode.CREATIVE)return;
+
         PlayerData playerData = this.playerManager.getData(p.getUniqueId());
         e.setCancelled(true);
+
         if(playerData.isSpectator())return;
+
         Item item = e.getItem();
         ItemStack itemStack = item.getItemStack();
-
         item.remove();
 
-        if(itemStack.getType() != Material.GOLD_INGOT){
-            return;
-        }
+        if(itemStack.getType() != Material.GOLD_INGOT) return;
 
         ItemStack goldItemStack = p.getInventory().getItem(GOLD_SLOT);
 
@@ -92,18 +121,17 @@ public class RolesListener implements Listener {
 
     @EventHandler
     public void interactItem(PlayerInteractEvent e){
-        if(this.gameManager.getGameState() != GameState.IN_GAME)return;
-        if(e.getItem() == null)return;
-
         Player p = e.getPlayer();
         if(this.isInCooldown(p))return;
+        if(e.getItem() == null)return;
+
+        if(this.gameManager.getGameState() != GameState.IN_GAME)return;
 
         this.cooldownInteractions.put(p.getUniqueId(), System.currentTimeMillis()+100);
 
         PlayerData playerData = this.playerManager.getData(p.getUniqueId());
-        Role role = playerData.getVisualRole();
-        if(role instanceof ItemTrigger itemTrigger){
-            itemTrigger.triggerAction(p,e.getItem());
+        for(GameActionListener gameActionListener: this.gamesListeners){
+            gameActionListener.playerInteractEvent(e,p,playerData, e.getItem());
         }
     }
 
@@ -117,9 +145,8 @@ public class RolesListener implements Listener {
         this.cooldownInteractions.put(p.getUniqueId(), System.currentTimeMillis()+100);
 
         PlayerData playerData = this.playerManager.getData(p.getUniqueId());
-        Role role = playerData.getVisualRole();
-        if(role instanceof ItemTrigger itemTrigger){
-            itemTrigger.triggerAction(p,e.getCurrentItem());
+        for(GameActionListener gameActionListener: this.gamesListeners){
+            gameActionListener.inventoryClickEvent(e,p,playerData, e.getCurrentItem());
         }
 
     }
