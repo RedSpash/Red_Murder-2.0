@@ -1,6 +1,7 @@
 package fr.red_spash.murder.maps;
 
 import fr.red_spash.murder.Murder;
+import fr.red_spash.murder.spawn.SpawnManager;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,18 +18,21 @@ import static org.bukkit.Bukkit.getLogger;
 public class MapManager {
 
     private final ArrayList<File> invalidMaps;
-    private final JavaPlugin murder;
+    private final JavaPlugin javaPlugin;
     private final ArrayList<GameMap> maps;
+    private final SpawnManager spawnManager;
 
-    public MapManager(Murder murder) {
-        this.murder = murder;
+
+    public MapManager(Murder javaPlugin, SpawnManager spawnManager) {
+        this.javaPlugin = javaPlugin;
+        this.spawnManager = spawnManager;
         this.maps = new ArrayList<>();
         this.invalidMaps = new ArrayList<>();
         this.loadMaps();
     }
 
     private void loadMaps() {
-        File mapsFolder = new File(this.murder.getDataFolder(), "maps");
+        File mapsFolder = new File(this.javaPlugin.getDataFolder(), "maps");
 
         if (mapsFolder.exists() && mapsFolder.isDirectory()) {
             File[] mapFolders = mapsFolder.listFiles(File::isDirectory);
@@ -56,7 +60,7 @@ public class MapManager {
                                 return;
                             }
 
-                            GameMap gameMap = new GameMap(name[name.length - 1], directory, fileConfiguration);
+                            GameMap gameMap = new GameMap(name[name.length - 1], directory, fileConfiguration, this.spawnManager);
                             this.maps.add(gameMap);
                             getLogger().info("[MAP LOADER]: map " + gameMap.getName() + " loaded !");
                         }
