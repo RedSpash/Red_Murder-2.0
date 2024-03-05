@@ -1,6 +1,6 @@
 package fr.red_spash.murder.game.roles.listener;
 
-import fr.red_spash.murder.game.commands.MessageCommand;
+import fr.red_spash.murder.game.commands.ActionBarMessageCommand;
 import fr.red_spash.murder.game.events.GameActionListener;
 import fr.red_spash.murder.game.roles.Role;
 import fr.red_spash.murder.game.roles.concrete_roles.Spy;
@@ -41,7 +41,7 @@ public class SpyListener extends GameActionListener {
 
         if (itemMeta.getDisplayName().equals(SPY_TRIGGER_ITEM_DISABLE.getItemMeta().getDisplayName())
                 || itemMeta.getDisplayName().equals(SPY_TRIGGER_ITEM_ENABLE.getItemMeta().getDisplayName())) {
-            if(spy.getCooldownPower() > System.currentTimeMillis()){
+            if(!spy.isUsingIsPower() && spy.getCooldownPower() > System.currentTimeMillis()){
                 p.sendMessage("§cVeuillez attendre entre chaque interaction!");
                 p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS,1,0);
                 return;
@@ -53,11 +53,11 @@ public class SpyListener extends GameActionListener {
             }
             if(spy.isUsingIsPower()){
                 this.disableInvisibility(p, spy);
-                playerData.addCooldown(new CooldownTask("§cRechargement...",playerData, COOLDOWN_BETWEEN_SWITCH,new MessageCommand(p,"§aRechargement terminée!"), this.javaPlugin));
+                playerData.addCooldown(new CooldownTask("§cRechargement...",playerData, COOLDOWN_BETWEEN_SWITCH,new ActionBarMessageCommand(p,"§a§lRechargement terminé!"), this.javaPlugin, true));
             }else{
                 this.enableInvisibility(p, spy);
             }
-            spy.setCooldownPower(System.currentTimeMillis()+(int) (1000* COOLDOWN_BETWEEN_SWITCH));
+            spy.setCooldownPower(System.currentTimeMillis()+(int) (1500* COOLDOWN_BETWEEN_SWITCH));
         }
     }
 

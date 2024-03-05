@@ -47,7 +47,6 @@ public class DeathManager {
                 boolean success = this.killAncient(p, ancient);
                 if(success) return;
             }
-
             this.playDeathEffect(playerData,"§aVous êtes mort par un "+playerDataDamager.getVisualRole().getName().toLowerCase());
         }else{
             this.playDeathEffect(playerData,"§aVous vous êtes suicidé!");

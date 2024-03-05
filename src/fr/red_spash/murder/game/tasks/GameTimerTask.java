@@ -20,7 +20,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 public class GameTimerTask implements Runnable{
 
-    private static final int SCHIZOPHRENIC_TIMER = 2;//60*1;
+    private static final int SCHIZOPHRENIC_TIMER = 60;
     private final GameManager gameManager;
     public static final int MAX_TIME = 60*7;
     private final PlayerManager playerManager;
@@ -80,9 +80,17 @@ public class GameTimerTask implements Runnable{
                 this.gameManager.stopGame(new Innocent());
                 this.bukkitTask.cancel();
                 return;
+        }else if(this.time == MAX_TIME-20){
+            for(Player player : Bukkit.getOnlinePlayers()){
+                PlayerData playerData = this.playerManager.getData(player.getUniqueId());
+                if(!playerData.isSpectator()){
+                   player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING,20*30,1,false,false,false)) ;
+                }
+                player.playSound(player.getLocation(), Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,1,1);
             }
-            this.time = this.time + 1;
         }
+        this.time = this.time + 1;
+    }
 
     public int getMaxTime() {
         return MAX_TIME;

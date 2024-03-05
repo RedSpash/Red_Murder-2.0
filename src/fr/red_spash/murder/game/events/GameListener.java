@@ -1,7 +1,7 @@
 package fr.red_spash.murder.game.events;
 
-import jdk.jfr.Enabled;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,7 +15,17 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 
+import java.util.ArrayList;
+
 public class GameListener implements Listener {
+
+    private final ArrayList<Material> lockedMaterials;
+    private final ArrayList<Material> lockedBlockName;
+
+    public GameListener() {
+        this.lockedMaterials = new ArrayList<>();
+        this.lockedBlockName = new ArrayList<>();
+    }
 
     @EventHandler
     public void entityDamageEvent(EntityDamageEvent e){
@@ -77,8 +87,8 @@ public class GameListener implements Listener {
             Block block = e.getClickedBlock();
             if(block == null)return;
             String name = block.getType().toString().toLowerCase();
-            if(!name.contains("door") && !name.contains("button") && !name.contains("egg")){
-                //e.setCancelled(true);
+            if(block.getType().isInteractable() || (!p.isSneaking() && p.getItemInUse() == null)){
+                e.setCancelled(true);
             }
         }
     }
