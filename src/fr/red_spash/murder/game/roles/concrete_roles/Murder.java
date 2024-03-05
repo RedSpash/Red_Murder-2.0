@@ -15,6 +15,7 @@ public class Murder extends Role {
 
     public static final int MURDER_SWORD_SLOT = 4;
     public static final String OPEN_YOUR_INVENTORY_FOR_ITEMS = "Ouvrez votre inventaire pour accédez à vos items.";
+    public static final int COOLDOWN_BETWEEN_EACH_KILL = 5;
     private boolean dash = true;
     private boolean throwSword = true;
     private Item swordOnGround;
@@ -23,6 +24,7 @@ public class Murder extends Role {
             .setLore("§7Tuez tout ce qui bouge!")
             .setUnbreakable(true)
             .toItemStack();
+    private long lastKill = 0L;
 
     @Override
     public String getHeadUUID() {
@@ -93,5 +95,14 @@ public class Murder extends Role {
     public boolean isMurder() {
         return true;
     }
+
+    public void setLastKill(long lastKill) {
+        this.lastKill = lastKill;
+    }
+
+    public boolean canKill(){
+        return this.lastKill + 1000 * COOLDOWN_BETWEEN_EACH_KILL < System.currentTimeMillis();
+    }
+
 
 }
