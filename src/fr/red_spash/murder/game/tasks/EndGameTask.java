@@ -23,7 +23,7 @@ public class EndGameTask implements Runnable{
     private final GameManager gameManager;
     private final BukkitTask runnable;
     private final GameMap actualMap;
-    private int timer = 30;
+    private int timer = 15;
 
     private final List<Color> colors = List.of(
             Color.RED,
