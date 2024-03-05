@@ -39,6 +39,8 @@ public class ScoreboardLines {
                 board.setLine(2,"§d"+SYMBOL+" lancement de la partie");
             }
             case PRE_START -> {
+                board.setLine(9,"§a"+SYMBOL+" §fCarte: §a"+this.gameManager.getActualMap().getName());
+                board.setLine(8,"§f§l§r");
                 board.setLine(7,"§a"+SYMBOL+" §fRôle: §caucun");
                 board.setLine(6,"§f");
                 board.setLine(5,"§a"+SYMBOL+" §fInnocents: §a"+this.gameManager.getRemainingInnocents());
@@ -47,6 +49,8 @@ public class ScoreboardLines {
                 board.setLine(2,"§a"+SYMBOL+" §fDétective: §aEn vie");
             }
             case IN_GAME -> {
+                board.setLine(9,"§a"+SYMBOL+" §fCarte: §a"+this.gameManager.getActualMap().getName());
+                board.setLine(8,"§f§l§r");
                 if(playerData.getVisualRole() != null && playerData.getVisualRole().isDiscovered()){
                     board.setLine(7,"§a"+SYMBOL+" §fRôle: "+playerData.getVisualRole().getMinecraftRoleColor()+playerData.getVisualRole().getName());
                 }else{
