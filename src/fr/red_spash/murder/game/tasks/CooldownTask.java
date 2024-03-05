@@ -2,6 +2,7 @@ package fr.red_spash.murder.game.tasks;
 
 
 import fr.red_spash.murder.game.commands.Command;
+import fr.red_spash.murder.game.commands.MessageCommand;
 import fr.red_spash.murder.players.PlayerData;
 import fr.red_spash.murder.utils.Utils;
 import net.md_5.bungee.api.ChatMessageType;
@@ -27,10 +28,23 @@ public class CooldownTask implements Runnable, Comparable<CooldownTask> {
         this(prefix,playerData,time,command,main,true);
     }
     public CooldownTask(String prefix,PlayerData playerData, double time, Command command, JavaPlugin main, boolean showTask){
+        this(prefix,playerData,time, time,command,main,showTask);
+    }
+
+    public CooldownTask(String prefix, PlayerData playerData, double time, JavaPlugin main, boolean showTask) {
+        this(prefix,playerData,time, time,null,main,showTask);
+    }
+
+    public CooldownTask(String prefix, PlayerData playerData, double time, double maxTime, JavaPlugin main, boolean showTask) {
+        this(prefix,playerData,time, maxTime,null,main,showTask);
+    }
+
+
+    public CooldownTask(String prefix, PlayerData playerData, double time, double maxTime, Command command, JavaPlugin main, boolean showTask) {
         this.prefix = prefix;
         this.bukkitTask = Bukkit.getScheduler().runTaskTimer(main, this,1,1);
         this.playerData = playerData;
-        this.maxTime = time;
+        this.maxTime = maxTime;
         this.time = time;
         this.command = command;
         this.player = Bukkit.getPlayer(playerData.getUUID());
@@ -63,7 +77,9 @@ public class CooldownTask implements Runnable, Comparable<CooldownTask> {
         }
         if(this.time <= 0){
             if(this.bukkitTask != null){
-                this.command.execute();
+                if(this.command != null){
+                    this.command.execute();
+                }
                 this.stopTask();
             }
             return;
