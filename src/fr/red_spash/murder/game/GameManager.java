@@ -81,7 +81,7 @@ public class GameManager {
     }
 
     public void startGame() {
-        List<Role> roles = this.roleConfiguration.getRoles();
+        List<Role> roles = new ArrayList<>(this.roleConfiguration.getRoles());
 
         while (roles.size() < Bukkit.getOnlinePlayers().size()){
             roles.add(new Innocent());
@@ -110,7 +110,7 @@ public class GameManager {
         this.goldTask = new GoldTask(this, this.main);
     }
 
-    public void checkEnd(){
+    public boolean checkEnd(){
         int murderRemainings = 0;
         int alive = 0;
         for(PlayerData playerData: this.playerManager.getAllPlayerData()){
@@ -125,9 +125,12 @@ public class GameManager {
 
         if(murderRemainings == alive){
             this.stopGame(new Murder());
+            return true;
         } else if (murderRemainings == 0) {
             this.stopGame(new Innocent());
+            return true;
         }
+        return false;
     }
 
     public void stopGame(){
