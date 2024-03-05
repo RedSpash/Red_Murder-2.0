@@ -2,6 +2,7 @@ package fr.red_spash.murder.commands;
 
 import fr.red_spash.murder.maps.GameMap;
 import fr.red_spash.murder.maps.MapManager;
+import fr.red_spash.murder.spawn.SpawnManager;
 import fr.red_spash.murder.utils.Utils;
 import fr.red_spash.murder.world.EmptyChunkGenerator;
 import org.bukkit.*;
@@ -9,8 +10,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -24,10 +23,12 @@ public class EditWorld implements CommandExecutor, TabCompleter {
     private final ArrayList<World> editingWorld;
     private final MapManager mapManager;
     private final JavaPlugin main;
+    private final SpawnManager spawnManager;
 
-    public EditWorld(JavaPlugin main, MapManager mapManager) {
+    public EditWorld(JavaPlugin main, MapManager mapManager, SpawnManager spawnManager) {
         this.mapManager = mapManager;
         this.main = main;
+        this.spawnManager = spawnManager;
         this.editingWorld = new ArrayList<>();
     }
 
@@ -126,7 +127,7 @@ public class EditWorld implements CommandExecutor, TabCompleter {
 
     public void deleteAllWorlds() {
         for(World world : this.editingWorld){
-            Utils.teleportPlayersAndRemoveWorld(world,false);
+            Utils.teleportPlayersAndRemoveWorld(world,false, this.spawnManager);
             Utils.deleteWorldFiles(world.getWorldFolder());
         }
     }

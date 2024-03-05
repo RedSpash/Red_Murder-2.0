@@ -1,5 +1,6 @@
 package fr.red_spash.murder.commands;
 
+import fr.red_spash.murder.spawn.SpawnManager;
 import fr.red_spash.murder.utils.Utils;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -18,10 +19,13 @@ public class SaveWorld implements CommandExecutor {
     private final EditWorld editWorld;
     private final ArrayList<UUID> waitingReSend;
     private final JavaPlugin main;
+    private final SpawnManager spawnManager;
 
-    public SaveWorld(JavaPlugin main, EditWorld editWorld) {
+
+    public SaveWorld(JavaPlugin main, EditWorld editWorld, SpawnManager spawnManager) {
         this.editWorld = editWorld;
         this.main = main;
+        this.spawnManager = spawnManager;
         this.waitingReSend = new ArrayList<>();
     }
 
@@ -68,7 +72,7 @@ public class SaveWorld implements CommandExecutor {
 
             try {
                 p.sendMessage("§aDéchargement du monde...");
-                Utils.teleportPlayersAndRemoveWorld(world,true);
+                Utils.teleportPlayersAndRemoveWorld(world,true, this.spawnManager);
                 p.sendMessage("§aMonde déchargé !");
                 if(path.exists()) {
                     p.sendMessage("§cLe monde existe déjà! Suppresion en cours du monde...");
