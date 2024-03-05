@@ -1,5 +1,7 @@
 package fr.red_spash.murder.utils;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -7,10 +9,13 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class ItemStackBuilder {
 
@@ -43,6 +48,30 @@ public class ItemStackBuilder {
         im.setLore(Arrays.asList(lore));
         this.itemStack.setItemMeta(im);
         return this;
+    }
+
+    public ItemStackBuilder setHeadTexture(String textureUUID){
+        if(this.getItemMeta() instanceof SkullMeta skullMeta){
+            GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+            profile.getProperties().put("textures", new Property("textures", textureUUID));
+
+            setGameProfile(skullMeta, profile);
+
+            this.itemStack.setItemMeta(skullMeta);
+        }else{
+            Bukkit.broadcastMessage("§cError, not instance of SkullMeta");
+        }
+        return this;
+    }
+
+    private static void setGameProfile(SkullMeta meta, GameProfile profile) {
+        try {
+            Field profileField = meta.getClass().getDeclaredField("profile");
+            profileField.setAccessible(true);
+            profileField.set(meta, profile);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     public ItemStackBuilder setLore(List<String> lore) {
