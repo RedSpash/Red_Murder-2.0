@@ -16,7 +16,7 @@ public class StartTimer implements Runnable{
     private final GameManager gameManager;
     private BukkitTask bukkitTask;
     private final List<String> countDown = new ArrayList<>(Arrays.asList("❶","❷","❸","❹","❺","❻","❼","❽","❾","❿"));
-    private int seconds = 15;
+    private int seconds = 17;;
 
     public StartTimer(GameManager gameManager) {
         this.gameManager = gameManager;
