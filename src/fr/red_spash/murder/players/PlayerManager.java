@@ -1,6 +1,7 @@
 package fr.red_spash.murder.players;
 
 import fr.red_spash.murder.game.tasks.CooldownTask;
+import fr.red_spash.murder.spawn.SpawnManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -15,9 +16,11 @@ public class PlayerManager {
 
     private final HashMap<UUID, PlayerData> playerDataHashMap;
     private final JavaPlugin main;
+    private final SpawnManager spawnManager;
 
-    public PlayerManager(JavaPlugin main) {
+    public PlayerManager(JavaPlugin main, SpawnManager spawnManager) {
         this.main = main;
+        this.spawnManager = spawnManager;
         playerDataHashMap = new HashMap<>();
     }
 
