@@ -22,6 +22,11 @@ public class Electrician extends Innocent {
     private boolean powerUsed = false;
 
     @Override
+    public String getHeadUUID() {
+        return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzQyMGNkZjJhZjU3Y2M3NTc3NzNhY2UzZjE5MTVjYjcyYjU0MzJhMmZkYTMzNzNiMTY3OGY5OGJlYTdhYzcifX19";
+    }
+
+    @Override
     public String getMinecraftRoleColor() {
         return "§5";
     }

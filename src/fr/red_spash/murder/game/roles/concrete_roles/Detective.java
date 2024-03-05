@@ -20,6 +20,11 @@ public class Detective extends Role {
     public static final int SLOT_BOW = 4;
 
     @Override
+    public String getHeadUUID() {
+        return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDU3YTExMzIwOWVmYWQ0ZTgwMWI0YWNiNmRkYzU2NWFmZDBjZDg0ZTMzZGMyNjk0YzFjZjBjNmM5MmJjMDE4YiJ9fX0=";
+    }
+
+    @Override
     public String getMinecraftRoleColor() {
         return "§6";
     }

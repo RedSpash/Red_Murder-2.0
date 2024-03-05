@@ -19,6 +19,7 @@ public abstract class Role {
     public abstract String shortDescription();
     public abstract String getDescription();
     public abstract Sound getSound();
+
     public void giveItems(Player p){
 
     }
@@ -47,5 +48,9 @@ public abstract class Role {
 
     public boolean isDiscovered() {
         return this.discovered;
+    }
+
+    public String getHeadUUID() {
+        return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWI0ZDNjNjk2NDllMjU3MTZjYTA5MzE3Y2I0ZGJhYzE5NTU1MjI5ZjY2YmYxMWJmZWIwYzc1YjdmZTg3ODUzIn19fQ==";
     }
 }

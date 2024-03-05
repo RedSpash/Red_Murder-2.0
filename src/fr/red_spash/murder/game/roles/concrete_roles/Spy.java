@@ -30,6 +30,11 @@ public class Spy extends Innocent{
     private long cooldownPower = 0L;
 
     @Override
+    public String getHeadUUID() {
+        return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGUwZDM2MWQ4MzI5MmMwNGZlYWE4MTFmMWU1NzgzODQyYjc4ZmFhOWM5ZmY4ZGE2Y2MwNjMwMThkNjJkYjdkZiJ9fX0=";
+    }
+
+    @Override
     public String getMinecraftRoleColor() {
         return "§d";
     }

@@ -18,6 +18,11 @@ public class Schizophrenic extends Role {
     }
 
     @Override
+    public String getHeadUUID() {
+        return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTVjNGJhZmYxOGQwZGY4YmZjZDRmYWJkYmM0OTQ3ZTI5NzVlODI3MmRmNzQzOWQzMTFmNmJkMTM2ZGZiYzE4ZiJ9fX0=";
+    }
+
+    @Override
     public String getMinecraftRoleColor() {
         return "§4";
     }

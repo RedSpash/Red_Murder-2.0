@@ -5,6 +5,12 @@ import org.bukkit.Sound;
 import java.awt.*;
 
 public class Lucky extends Innocent {
+
+    @Override
+    public String getHeadUUID() {
+        return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWMyNWZlZmFiZjM4ODc0MmZjZDNiYTQxZmRkMzViZDk2NzRmNGRhMGZhYmQ1NWJjNGZiODZmZWExYWE0NzEzIn19fQ==";
+    }
+
     @Override
     public String getMinecraftRoleColor() {
         return "§e";

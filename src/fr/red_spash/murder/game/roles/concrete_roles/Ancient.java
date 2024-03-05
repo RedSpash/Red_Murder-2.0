@@ -8,6 +8,11 @@ public class Ancient extends Innocent {
     private boolean respawned = false;
 
     @Override
+    public String getHeadUUID() {
+        return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzVlMGY5MTViNTY0NmI0MGU2ZDIyY2E2YWYxZjRlMzM2Njk3MmEzYWVlNDRhMWEzNmZiNTE3ODQ5YzI2M2ZjOSJ9fX0=";
+    }
+
+    @Override
     public String getMinecraftRoleColor() {
         return "§f";
     }

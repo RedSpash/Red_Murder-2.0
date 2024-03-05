@@ -14,6 +14,7 @@ import java.awt.*;
 public class Murder extends Role {
 
     public static final int MURDER_SWORD_SLOT = 4;
+    public static final String OPEN_YOUR_INVENTORY_FOR_ITEMS = "Ouvrez votre inventaire pour accédez à vos items.";
     private boolean dash = true;
     private boolean throwSword = true;
     private Item swordOnGround;
@@ -22,6 +23,11 @@ public class Murder extends Role {
             .setLore("§7Tuez tout ce qui bouge!")
             .setUnbreakable(true)
             .toItemStack();
+
+    @Override
+    public String getHeadUUID() {
+        return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTU5NTNkNjMxMjlmNTIwNWJjZGE5NmM5MWMwNzBjYjFkMzlkMTU1NWQ1ZGZjNDM4MThkNzM3ODg3YzNkMSJ9fX0=";
+    }
 
     public boolean canDash() {
         return dash;

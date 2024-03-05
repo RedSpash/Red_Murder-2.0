@@ -9,6 +9,11 @@ public class Innocent extends Role {
 
     private boolean infiniteBow = false;
 
+    @Override
+    public String getHeadUUID() {
+        return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzkwNGVmOTJmYzBjYzk5Y2I4ZWY4NTE5N2M1NjQwMDI3M2YwMTQ3MGE3NTZlNTZhMTZkMzQ1NDdjNDE3YzQyMCJ9fX0=";
+    }
+
     public void setInfiniteBow(boolean infiniteBow) {
         this.infiniteBow = infiniteBow;
     }

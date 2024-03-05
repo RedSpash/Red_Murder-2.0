@@ -10,7 +10,7 @@ import java.awt.Color;
 
 public class Vagabond extends Innocent{
     public static final int VAGABOND_SLOT = 22;
-    public static final int TELEPORTATION_MAX_USE = 2;
+    public static final int TELEPORTATION_MAX_USE = 20;//2;
 
     public static final ItemStack VAGABOND_TELEPORT_BEACON = new ItemStackBuilder(Material.BEACON)
             .setName("§cPlacer votre balise de téléportation")
@@ -29,6 +29,11 @@ public class Vagabond extends Innocent{
     private int remainingUse = TELEPORTATION_MAX_USE;
     private Location beaconLocation = null;
     private long lastTeleportation = 0L;
+
+    @Override
+    public String getHeadUUID() {
+        return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGIyMGM4NDhhMmQ1NTViNmQ4YWYxMDQ3ZGNhOGFmNDU0YjA2OWU2YjI2Mzc4MWEwYTIxYmJjYmFjMjkyMmNjIn19fQ==";
+    }
 
     @Override
     public String getMinecraftRoleColor() {
