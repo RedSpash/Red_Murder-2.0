@@ -1,6 +1,6 @@
 package fr.red_spash.murder.utils;
 
-import fr.red_spash.murder.Murder;
+import fr.red_spash.murder.spawn.SpawnManager;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -22,9 +22,9 @@ public class Utils {
         return (int) (Math.random()*(max-min)) + min;
     }
 
-    public static void teleportPlayersAndRemoveWorld(World world, boolean save) {
+    public static void teleportPlayersAndRemoveWorld(World world, boolean save, SpawnManager spawnManager) {
         for(Player p : world.getPlayers()){
-            p.teleport(Murder.SPAWN);
+            spawnManager.teleportSpawn(p);
             p.sendMessage("§cLe monde vient d'être détruit! Vous êtes désormais au spawn.");
         }
         Bukkit.unloadWorld(world,save);
@@ -77,4 +77,17 @@ public class Utils {
         int scale = (int) Math.pow(10, precision);
         return (double) Math.round(value * scale) / scale;
     }
+
+    public static String addZero(double nombre, int taille) {
+        String nombreString = String.valueOf(nombre);
+        int difference = taille - nombreString.length();
+
+        if (difference <= 0) {
+            return nombreString;
+        } else {
+            return nombreString +
+                    "0".repeat(difference);
+        }
+    }
+
 }

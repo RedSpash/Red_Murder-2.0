@@ -1,5 +1,6 @@
 package fr.red_spash.murder.maps;
 
+import fr.red_spash.murder.spawn.SpawnManager;
 import fr.red_spash.murder.utils.Utils;
 import fr.red_spash.murder.world.EmptyChunkGenerator;
 import org.bukkit.*;
@@ -18,11 +19,13 @@ public class GameMap{
     private final FileConfiguration fileConfiguration;
     private final ArrayList<Location> spawnsLocation;
     private World world;
+    private final SpawnManager spawnManager;
 
-    public GameMap(String name, File file, FileConfiguration fileConfiguration) {
+    public GameMap(String name, File file, FileConfiguration fileConfiguration, SpawnManager spawnManager) {
         this.name = name;
         this.file = file;
         this.fileConfiguration = fileConfiguration;
+        this.spawnManager = spawnManager;
         this.spawnsLocation = new ArrayList<>();
     }
 
@@ -64,7 +67,7 @@ public class GameMap{
 
     public void deleteWorld(World world){
         if(world != null){
-            Utils.teleportPlayersAndRemoveWorld(world,false);
+            Utils.teleportPlayersAndRemoveWorld(world,false, this.spawnManager);
             Utils.deleteWorldFiles(world.getWorldFolder());
             this.world = null;
         }else{
