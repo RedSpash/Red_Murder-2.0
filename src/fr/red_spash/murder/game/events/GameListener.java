@@ -10,6 +10,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -19,13 +21,21 @@ import java.util.ArrayList;
 
 public class GameListener implements Listener {
 
-    private final ArrayList<Material> lockedMaterials;
-    private final ArrayList<Material> lockedBlockName;
+    private final ArrayList<String> unLockedBlockName;
 
     public GameListener() {
-        this.lockedMaterials = new ArrayList<>();
-        this.lockedBlockName = new ArrayList<>();
+        this.unLockedBlockName = new ArrayList<>();
+
+        this.initializeUnLockedBlockName();
     }
+
+    private void initializeUnLockedBlockName() {
+        this.unLockedBlockName.add("tripwire");
+        this.unLockedBlockName.add("door");
+        this.unLockedBlockName.add("button");
+        this.unLockedBlockName.add("pressure");
+    }
+
 
     @EventHandler
     public void entityDamageEvent(EntityDamageEvent e){
@@ -81,12 +91,26 @@ public class GameListener implements Listener {
     }
 
     @EventHandler
+    public void entity(HangingBreakByEntityEvent e){
+        if(e.getEntity() instanceof Player p
+                && (p.isOp() && p.getGameMode() == GameMode.CREATIVE)){
+            return;
+        }
+        e.setCancelled(true);
+    }
+
+    @EventHandler
     public void blockPlaceEvent(PlayerInteractEvent e){
         Player p = e.getPlayer();
         if(!p.isOp() || p.getGameMode() != GameMode.CREATIVE){
             Block block = e.getClickedBlock();
             if(block == null)return;
             String name = block.getType().toString().toLowerCase();
+            for(String unLocked : this.unLockedBlockName){
+                if(name.contains(unLocked)){
+                    return;
+                }
+            }
             if(block.getType().isInteractable() || (!p.isSneaking() && p.getItemInUse() == null)){
                 e.setCancelled(true);
             }
