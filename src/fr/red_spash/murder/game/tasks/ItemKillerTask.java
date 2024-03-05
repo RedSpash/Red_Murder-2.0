@@ -42,7 +42,7 @@ public class ItemKillerTask implements Runnable {
                 PlayerData playerData = this.gameManager.getPlayerManager().getData(p);
                 Role role = playerData.getVisualRole();
 
-                if(role.isMurder())return;
+                if(role.isMurder() || playerData.isSpectator())continue;
 
                 this.deathManager.killPlayer(p,this.playerLauncher);
             }
