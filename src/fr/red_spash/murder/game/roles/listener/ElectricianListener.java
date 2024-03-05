@@ -23,6 +23,12 @@ import static fr.red_spash.murder.game.roles.concrete_roles.Electrician.TIMER_EL
 
 public class ElectricianListener extends GameActionListener {
 
+    private final PlayerManager playerManager;
+
+    public ElectricianListener(PlayerManager playerManager) {
+        this.playerManager = playerManager;
+    }
+
     @Override
     public void inventoryClickEvent(InventoryClickEvent e, Player p, PlayerData playerData, ItemStack itemStack) {
         Role role = playerData.getVisualRole();
@@ -36,12 +42,15 @@ public class ElectricianListener extends GameActionListener {
             electrician.setPowerUsed(true);
             for(Player pl : Bukkit.getOnlinePlayers()){
                 pl.playSound(pl.getLocation(),Sound.BLOCK_RESPAWN_ANCHOR_DEPLETE,2,0);
-                if(pl.getUniqueId() == p.getUniqueId()){
-                    pl.sendTitle("§5§lVous êtes semi-aveuglé!", ChatColor.of(electrician.getRoleColor())+"La lumière clignote pour vous!",0,20*5,0);
-                    pl.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS,20*TIMER_ELECTRICIAN,4,false,false,false));
-                }else{
-                    pl.sendTitle("§5§lVous êtes aveuglé!", ChatColor.of(electrician.getRoleColor())+"l'"+electrician.getName()+" vient d'éteindre la lumière!",0,20*5,0);
-                    pl.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,20*TIMER_ELECTRICIAN,4,false,false,false));
+                PlayerData pdata = this.playerManager.getData(pl);
+                if(!pdata.isSpectator()){
+                    if(pl.getUniqueId() == p.getUniqueId()){
+                        pl.sendTitle("§5§lVous êtes semi-aveuglé!", ChatColor.of(electrician.getRoleColor())+"La lumière clignote pour vous!",0,20*5,0);
+                        pl.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS,20*TIMER_ELECTRICIAN,4,false,false,false));
+                    }else{
+                        pl.sendTitle("§5§lVous êtes aveuglé!", ChatColor.of(electrician.getRoleColor())+"l'"+electrician.getName()+" vient d'éteindre la lumière!",0,20*5,0);
+                        pl.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,20*TIMER_ELECTRICIAN,4,false,false,false));
+                    }
                 }
 
             }
