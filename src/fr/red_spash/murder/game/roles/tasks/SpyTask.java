@@ -5,13 +5,10 @@ import fr.red_spash.murder.game.roles.listener.SpyListener;
 import fr.red_spash.murder.players.PlayerData;
 import fr.red_spash.murder.players.PlayerManager;
 import fr.red_spash.murder.utils.Utils;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
-import java.awt.*;
 
 public class SpyTask implements Runnable {
 
@@ -42,19 +39,19 @@ public class SpyTask implements Runnable {
                         double percentage = spy.getPower() * 100 / Spy.SPY_INVISIBILITY_TIME;
 
                         for (int i = 1; i <= 50; i++) {
-                            String color = "§a";
+                            String color = "§c";
 
                             if (i * 2 <= percentage) {
-                                color = "§c";
+                                color = "§a";
                             }
 
                             actionBarMessage.insert(0, color + "|");
                         }
                         String seconds;
                         if(spy.getPower() >= 10){
-                            seconds = Utils.ajouterZeros(Utils.round(spy.getPower(),2),5);
+                            seconds = Utils.addZero(Utils.round(spy.getPower(),2),5);
                         }else{
-                            seconds = Utils.ajouterZeros(Utils.round(spy.getPower(),2),4);
+                            seconds = Utils.addZero(Utils.round(spy.getPower(),2),4);
                         }
                         p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§c§lTemps restant: "+actionBarMessage+" §7("+seconds+" secondes)"));
                     }
