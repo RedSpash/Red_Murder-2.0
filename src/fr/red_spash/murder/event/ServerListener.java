@@ -6,6 +6,7 @@ import fr.red_spash.murder.game.scoreboard.ScoreboardLines;
 import fr.red_spash.murder.players.DeathManager;
 import fr.red_spash.murder.players.PlayerData;
 import fr.red_spash.murder.players.PlayerManager;
+import fr.red_spash.murder.spawn.SpawnManager;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,11 +21,13 @@ public class ServerListener implements Listener {
     private final GameManager gameManager;
     private final PlayerManager playerManager;
     private final DeathManager deathManager;
+    private final SpawnManager spawnManager;
 
-    public ServerListener(GameManager gameManager, DeathManager deathManager) {
+    public ServerListener(GameManager gameManager, DeathManager deathManager, SpawnManager spawnManager) {
         this.gameManager = gameManager;
         this.playerManager = gameManager.getPlayerManager();
         this.deathManager = deathManager;
+        this.spawnManager = spawnManager;
     }
 
     @EventHandler
@@ -54,6 +57,7 @@ public class ServerListener implements Listener {
             p.teleport(this.gameManager.getActualMap().getSpawnLocation());
             setSpectator = true;
         }else{
+            this.spawnManager.giveSpawnItems(p);
             e.setJoinMessage(name+" §arejoint le murder!");
         }
         if(playerManager.getData(p) == null){
