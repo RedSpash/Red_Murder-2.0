@@ -1,4 +1,4 @@
-package fr.red_spash.murder.game.events;
+package fr.red_spash.murder.game.roles.listener;
 
 import fr.red_spash.murder.game.GameManager;
 import fr.red_spash.murder.game.commands.CanThrowSwordCommand;
@@ -12,6 +12,7 @@ import fr.red_spash.murder.players.DeathManager;
 import fr.red_spash.murder.players.PlayerData;
 import fr.red_spash.murder.players.PlayerManager;
 import org.bukkit.Sound;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -59,16 +60,20 @@ public class MurderListener implements Listener {
         PlayerData damagerPlayerData = this.playerManager.getData(damager);
         Role damagerRole = damagerPlayerData.getVisualRole();
 
-        if(!(damagerRole.isMurder()))return;
+        if(!(damagerRole instanceof Murder murder))return;
         if(targetRole.isMurder()){
             damager.playSound(damager.getLocation(), Sound.ENTITY_IRON_GOLEM_HURT, 2, 0);
             damager.sendTitle("§c","§cVous ne pouvez pas taper votre allié!",0,30,0);
             return;
         }
+        if(!murder.canKill())return;
 
         damager.playSound(target.getLocation(), Sound.ENTITY_PLAYER_HURT,1,1);
 
         this.deathManager.killPlayer(target,damager, "Un "+targetRole.getName()+" vient de mourir par un meurtrier!");
+        damager.getInventory().setItem(Murder.MURDER_SWORD_SLOT,null);
+        damagerPlayerData.addCooldown(new CooldownTask("§c§lRechargement...",damagerPlayerData,Murder.COOLDOWN_BETWEEN_EACH_KILL,new GiveSwordCommand(damager, murder),this.main,true));
+        murder.setLastKill(System.currentTimeMillis());
     }
 
     @EventHandler

@@ -34,7 +34,11 @@ public class DeathManager {
         this.gameManager = gameManager;
     }
 
-    public void killPlayer(Player p, Player damager, String message) {
+    public void killPlayer(Player p, Player damager, String message){
+        this.killPlayer(p,damager,message,true);
+    }
+
+    public void killPlayer(Player p, Player damager, String message, boolean checkEnd) {
         PlayerData playerData = this.playerManager.getData(p);
         PlayerData playerDataDamager = null;
         if(damager != null){
@@ -68,7 +72,9 @@ public class DeathManager {
         if(message != null){
             Bukkit.broadcastMessage("§e"+message);
         }
-        this.gameManager.checkEnd();
+        if(checkEnd){
+            this.gameManager.checkEnd();
+        }
     }
 
     private boolean killAncient(Player p, Ancient ancient) {

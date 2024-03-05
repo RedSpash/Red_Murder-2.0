@@ -1,4 +1,4 @@
-package fr.red_spash.murder.game.events;
+package fr.red_spash.murder.game.roles.listener;
 
 import fr.red_spash.murder.game.commands.GiveArrowCommand;
 import fr.red_spash.murder.game.roles.concrete_roles.Detective;
@@ -60,7 +60,7 @@ public class DetectiveListener implements Listener {
         Role hitRole = dataHit.getVisualRole();
 
         if(shooterRole.isMurder() && !hitRole.isMurder()) {
-            this.deathManager.killPlayer(playerHit, shooter, "Un innocent est mort par un murder!");
+            this.deathManager.killPlayer(playerHit, shooter, "Un "+hitRole.getName()+" est mort par un murder!");
         }else if(!shooterRole.isMurder() && hitRole.isMurder()){
             this.deathManager.killPlayer(playerHit, shooter, "§aUn murder vient d'être tué!");
         }else if(!hitRole.isMurder()) {
@@ -71,7 +71,7 @@ public class DetectiveListener implements Listener {
                 if(List.of("a","e","i","o","u").contains(String.valueOf(shooterRole.getName().charAt(0)).toLowerCase())){
                     ePrefixed = "'";
                 }
-                this.deathManager.killPlayer(playerHit, shooter, "Un "+hitRole.getName().toLowerCase()+" est mort par un "+shooterRole.getName().toLowerCase()+"!");
+                this.deathManager.killPlayer(playerHit, shooter, "Un "+hitRole.getName().toLowerCase()+" est mort par un "+shooterRole.getName().toLowerCase()+"!", false);
                 this.deathManager.killPlayer(shooter, null, "§cL"+ePrefixed+shooterRole.getName().toLowerCase()+" était incapable de supporter l'idée de se tromper, il a donc mis fin à ses jours!");
             }
         }
