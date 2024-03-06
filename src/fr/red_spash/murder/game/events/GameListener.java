@@ -10,11 +10,13 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerPickupArrowEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 
 import java.util.ArrayList;
@@ -87,6 +89,11 @@ public class GameListener implements Listener {
     @EventHandler
     public void playerDropItem(FoodLevelChangeEvent e){
         e.setFoodLevel(20);
+        e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void hitByArrow(PlayerPickupArrowEvent e){
         e.setCancelled(true);
     }
 

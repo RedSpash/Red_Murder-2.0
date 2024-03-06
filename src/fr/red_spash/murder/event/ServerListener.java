@@ -58,6 +58,7 @@ public class ServerListener implements Listener {
             setSpectator = true;
         }else{
             this.spawnManager.giveSpawnItems(p);
+            this.spawnManager.playTitle(p);
             e.setJoinMessage(name+" §arejoint le murder!");
         }
         if(playerManager.getData(p) == null){

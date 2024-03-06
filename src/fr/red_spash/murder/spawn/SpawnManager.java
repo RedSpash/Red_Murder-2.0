@@ -1,11 +1,14 @@
 package fr.red_spash.murder.spawn;
 
 import fr.red_spash.murder.utils.ItemStackBuilder;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import java.awt.*;
 
 public class SpawnManager {
     public static final ItemStack VIEW_ROLES = new ItemStackBuilder(Material.PLAYER_HEAD)
@@ -35,5 +38,9 @@ public class SpawnManager {
     public void teleportSpawn(Player p) {
         p.teleport(this.spawnLocation);
         giveSpawnItems(p);
+    }
+
+    public void playTitle(Player p) {
+        p.sendTitle(ChatColor.of(Color.RED)+"§lMURDER - BETA TEST","§c§lDéveloppé par @Red_Spash",10,20*3,20);
     }
 }

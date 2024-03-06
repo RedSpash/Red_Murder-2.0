@@ -47,8 +47,6 @@ public class DetectiveListener implements Listener {
 
     @EventHandler
     public void hitByArrow(ProjectileHitEvent e){
-        e.getEntity().remove();
-
         if(!(e.getEntity() instanceof Arrow arrow))return;
         if(!(e.getHitEntity() instanceof Player playerHit))return;
         if(!(arrow.getShooter() instanceof Player shooter))return;
