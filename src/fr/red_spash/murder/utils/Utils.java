@@ -1,5 +1,6 @@
 package fr.red_spash.murder.utils;
 
+import fr.red_spash.murder.game.roles.Role;
 import fr.red_spash.murder.spawn.SpawnManager;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -90,4 +91,11 @@ public class Utils {
         }
     }
 
+    public static Role createNewInstance(Role role) {
+        try {
+            return role.getClass().newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -1,5 +1,8 @@
 package fr.red_spash.murder.game.roles;
 
+import fr.red_spash.murder.spawn.GamePreset;
+import fr.red_spash.murder.utils.Utils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,5 +34,12 @@ public class RoleConfiguration {
             }
         }
         return amount;
+    }
+
+    public void loadPreset(GamePreset gamePreset) {
+        this.roles.clear();
+        for(Role role : gamePreset.getRoleList()){
+            this.roles.add(Utils.createNewInstance(role));
+        }
     }
 }
