@@ -94,7 +94,7 @@ public class GameManager {
 
         for(Player p : Bukkit.getOnlinePlayers()){
             PlayerData playerData = playerManager.getData(p);
-            playerData.setRole(roles.remove(0));
+            playerData.setRole(Utils.createNewInstance(roles.remove(0)));
             p.teleport(spawns.remove(Utils.generateRandomNumber(0,spawns.size()-1)));
             if(spawns.isEmpty()){
                 spawns = new ArrayList<>(this.actualMap.getSpawnsLocation());
