@@ -1,13 +1,10 @@
 package fr.red_spash.murder.spawn;
 
 import fr.red_spash.murder.game.GameManager;
-import fr.red_spash.murder.game.roles.Role;
-import fr.red_spash.murder.game.roles.RoleConfiguration;
-import fr.red_spash.murder.game.roles.concrete_roles.*;
 import fr.red_spash.murder.maps.GameMap;
 import fr.red_spash.murder.maps.MapManager;
 import fr.red_spash.murder.utils.ItemStackBuilder;
-import net.md_5.bungee.api.ChatColor;
+import fr.red_spash.murder.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -26,8 +23,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class MapsManagerListener implements Listener {
 
@@ -75,8 +72,8 @@ public class MapsManagerListener implements Listener {
         if(!this.openedMenu.contains(p.getUniqueId())){
             this.openedMenu.add(p.getUniqueId());
         }
-        int size = this.mapManager.getMaps().size()/9;
-        if(this.mapManager.getMaps().size() % 9 != 0){
+        int size = (this.mapManager.getMaps().size()+1)/9;
+        if((this.mapManager.getMaps().size()+1) % 9 != 0){
             size = size + 1;
         }
         Inventory inventory = Bukkit.createInventory(null,size*9, INVENTORY_NAME);
@@ -86,12 +83,7 @@ public class MapsManagerListener implements Listener {
         int index = 0;
         for(GameMap gameMap : this.mapManager.getMaps()){
             ArrayList<String> lore = new ArrayList<>();
-            int voteFor = 0;
-            for(int vote : this.votes.values()){
-                if(vote == index){
-                    voteFor = voteFor + 1;
-                }
-            }
+            int voteFor = this.getVoteFor(index);
             if(voteFor > maxVote){
                 maxVote = voteFor;
                 indexMap = index;
@@ -117,6 +109,11 @@ public class MapsManagerListener implements Listener {
             );
             index = index + 1;
         }
+        inventory.setItem(inventory.getSize()-1,
+                new ItemStackBuilder(Material.CLOCK)
+                        .setName("§cAléatoire")
+                        .setLore("§7Permet de jouer","§7sur une carte aléatoire.","§f","§9§l"+this.getVoteFor(inventory.getSize()-1)+" votes enregistrés pour la map!")
+                        .toItemStack());
 
         if(indexMap != -1){
             ItemStack itemStack = inventory.getItem(indexMap);
@@ -130,6 +127,15 @@ public class MapsManagerListener implements Listener {
 
     }
 
+    private int getVoteFor(int index) {
+        return
+                this.votes.values()
+                        .stream()
+                        .filter(integer -> integer == index)
+                        .collect(Collectors.toList())
+                        .size();
+    }
+
     @EventHandler
     public void inventoryClickEvent(InventoryClickEvent e){
         if(!(e.getWhoClicked() instanceof Player p))return;
@@ -141,18 +147,56 @@ public class MapsManagerListener implements Listener {
         if(!p.getOpenInventory().getTitle().equals(INVENTORY_NAME))return;
 
         e.setCancelled(true);
-        if(e.getSlot() < this.mapManager.getMaps().size()){
-            GameMap gameMap = mapManager.getMaps().get(e.getSlot());
-
+        int vote = e.getRawSlot();
+        if(vote == e.getInventory().getSize()-1){
             if(e.getAction() == InventoryAction.PICKUP_ALL){
                 this.votes.put(p.getUniqueId(),e.getSlot());
-                p.sendMessage("§aVotre vote pour la carte "+gameMap.getName()+" est enregistré!");
-                p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT,1,2);
+                p.sendMessage("§aVotre vote pour le choix de la carte aléatoire est enregistré!");
+                p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT,1,0);
                 this.updateInventories();
+                return;
+            }else if(e.getAction() == InventoryAction.PICKUP_HALF){
+                if(p.isOp()){
+                    this.gameManager.startPreGame(this.mapManager.getMaps().get(Utils.generateRandomNumber(0,this.mapManager.getMaps().size()-1)));
+                    this.votes.clear();
+                }else{
+                    this.votes.remove(p.getUniqueId(),e.getSlot());
+                    p.sendMessage("§cVotre vote pour la carte aléatoire vient d'être annulé!");
+                    this.updateInventories();
+                    p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT,1,0);
+                }
+            }
+        }
+        if(vote < this.mapManager.getMaps().size()){
+            GameMap gameMap = mapManager.getMaps().get(e.getSlot());
+
+            int actualVote = this.votes.getOrDefault(p.getUniqueId(),-1);
+            if(e.getAction() == InventoryAction.PICKUP_ALL){
+                if(actualVote != vote){
+                    this.votes.put(p.getUniqueId(),e.getSlot());
+                    p.sendMessage("§aVotre vote pour la carte "+gameMap.getName()+" est enregistré!");
+                    p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT,1,2);
+                    this.updateInventories();
+                }else{
+                    p.sendMessage("§cVous avez déjà voté pour cette map!");
+                    p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS,1,1);
+                }
+
             }else if(e.getAction() == InventoryAction.PICKUP_HALF){
                 if(p.isOp()){
                     this.gameManager.startPreGame(gameMap);
                     this.votes.clear();
+                }else{
+                    if(actualVote == vote){
+                        this.votes.remove(p.getUniqueId(),e.getSlot());
+                        p.sendMessage("§cVotre vote pour la carte "+gameMap.getName()+" vient d'être annulé!");
+                        this.updateInventories();
+                        p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT,1,0);
+
+                    }else{
+                        p.sendMessage("§cVous n'avez pas voté pour cette map!");
+                        p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS,1,1);
+                    }
                 }
             }
         }
