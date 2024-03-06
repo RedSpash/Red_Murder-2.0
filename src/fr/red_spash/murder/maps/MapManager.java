@@ -61,6 +61,10 @@ public class MapManager {
                             }
 
                             GameMap gameMap = new GameMap(name[name.length - 1], directory, fileConfiguration, this.spawnManager);
+                            if(fileConfiguration.getConfigurationSection("spawns").getKeys(false).size() <= 2){
+                                this.invalidateMap(directory);
+                                return;
+                            }
                             this.maps.add(gameMap);
                             getLogger().info("[MAP LOADER]: map " + gameMap.getName() + " loaded !");
                         }
