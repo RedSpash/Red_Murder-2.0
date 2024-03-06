@@ -45,7 +45,6 @@ public class Murder extends JavaPlugin {
 
         Bukkit.getServer().getScheduler().runTaskTimer(this, new SpyTask(this.playerManager, this.spyListener), 0, 1);
         Bukkit.getConsoleSender().sendMessage("§c§lRed_Murder prêt !");
-
     }
 
     private void createMainsManagers() {
@@ -59,6 +58,12 @@ public class Murder extends JavaPlugin {
 
         this.gameManager = new GameManager(this, mapManager, playerManager, bowOnGroundListener, roleConfiguration, this.spawnManager);
         this.deathManager = new DeathManager(this, this.gameManager);
+
+        Bukkit.getScheduler().runTaskLater(this, () -> {
+            for(Player player : Bukkit.getOnlinePlayers()){
+                spawnManager.playTitle(player);
+            }
+        },2);
     }
 
     private void createRolesListeners() {
