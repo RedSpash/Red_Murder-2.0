@@ -1,6 +1,6 @@
 package fr.red_spash.murder.players;
 
-import fr.red_spash.murder.game.tasks.CooldownTask;
+import fr.red_spash.murder.game.tasks.cooldown.CooldownTask;
 import fr.red_spash.murder.spawn.SpawnManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

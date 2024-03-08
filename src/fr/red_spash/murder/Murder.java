@@ -7,7 +7,9 @@ import fr.red_spash.murder.event.ServerListener;
 import fr.red_spash.murder.game.GameManager;
 import fr.red_spash.murder.game.GameState;
 import fr.red_spash.murder.game.events.*;
+import fr.red_spash.murder.game.roles.Role;
 import fr.red_spash.murder.game.roles.RoleConfiguration;
+import fr.red_spash.murder.game.roles.concrete_roles.*;
 import fr.red_spash.murder.game.roles.listener.*;
 import fr.red_spash.murder.game.roles.tasks.SpyTask;
 import fr.red_spash.murder.maps.MapManager;
@@ -22,6 +24,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Murder extends JavaPlugin {
     private EditWorld editWorld;
@@ -35,9 +38,22 @@ public class Murder extends JavaPlugin {
     private ArrayList<GameActionListener> gameActionListeners;
     private RoleManagerListener roleManagerListener;
     private SpyListener spyListener;
+    private final List<Role> allRoles = List.of(
+            new fr.red_spash.murder.game.roles.concrete_roles.Murder(),
+            new Detective(),
+            new Schizophrenic(),
+            new Ancient(),
+            new Electrician(),
+            new Lucky(),
+            new Spy(),
+            new Vagabond(),
+            new Paranoiac(),
+            new Innocent()
+        );
 
     @Override
     public void onEnable(){
+        
         this.createMainsManagers();
         this.createRolesListeners();
         this.registerEventListener();
@@ -68,10 +84,11 @@ public class Murder extends JavaPlugin {
 
     private void createRolesListeners() {
         this.gameActionListeners = new ArrayList<>();
-        this.spyListener = new SpyListener(playerManager, this);
-        gameActionListeners.add(spyListener);
+        this.spyListener = new SpyListener(this.playerManager, this);
+        gameActionListeners.add(this.spyListener);
         gameActionListeners.add(new ElectricianListener(this.playerManager));
         gameActionListeners.add(new VagabondListener(this));
+        gameActionListeners.add(new PsychicListener(this.playerManager,this));
     }
 
     private void registerCommands() {
@@ -84,7 +101,7 @@ public class Murder extends JavaPlugin {
     }
 
     private void registerEventListener() {
-        this.roleManagerListener = new RoleManagerListener(roleConfiguration);
+        this.roleManagerListener = new RoleManagerListener(this.roleConfiguration, this.allRoles);
 
         PluginManager pm = Bukkit.getServer().getPluginManager();
         pm.registerEvents(new ServerListener(this.gameManager, deathManager, this.spawnManager),this);

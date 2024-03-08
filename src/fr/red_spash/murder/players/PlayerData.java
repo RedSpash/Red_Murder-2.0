@@ -3,7 +3,7 @@ package fr.red_spash.murder.players;
 import fr.red_spash.murder.game.roles.Role;
 import fr.red_spash.murder.game.roles.concrete_roles.Schizophrenic;
 import fr.red_spash.murder.game.scoreboard.RedScoreBoard;
-import fr.red_spash.murder.game.tasks.CooldownTask;
+import fr.red_spash.murder.game.tasks.cooldown.CooldownTask;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

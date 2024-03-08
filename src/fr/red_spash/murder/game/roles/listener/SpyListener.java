@@ -4,7 +4,7 @@ import fr.red_spash.murder.game.commands.ActionBarMessageCommand;
 import fr.red_spash.murder.game.events.GameActionListener;
 import fr.red_spash.murder.game.roles.Role;
 import fr.red_spash.murder.game.roles.concrete_roles.Spy;
-import fr.red_spash.murder.game.tasks.CooldownTask;
+import fr.red_spash.murder.game.tasks.cooldown.CooldownTask;
 import fr.red_spash.murder.players.PlayerData;
 import fr.red_spash.murder.players.PlayerManager;
 import org.bukkit.Bukkit;

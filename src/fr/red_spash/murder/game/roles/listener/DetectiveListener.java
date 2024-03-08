@@ -4,7 +4,7 @@ import fr.red_spash.murder.game.commands.GiveArrowCommand;
 import fr.red_spash.murder.game.roles.concrete_roles.Detective;
 import fr.red_spash.murder.game.roles.concrete_roles.Innocent;
 import fr.red_spash.murder.game.roles.Role;
-import fr.red_spash.murder.game.tasks.CooldownTask;
+import fr.red_spash.murder.game.tasks.cooldown.CooldownTask;
 import fr.red_spash.murder.players.DeathManager;
 import fr.red_spash.murder.players.PlayerData;
 import fr.red_spash.murder.players.PlayerManager;
