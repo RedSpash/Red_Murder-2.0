@@ -14,7 +14,7 @@ public class Electrician extends Innocent {
     private static final int ELECTRICIAN_SLOT = 22;
     public static final ItemStack ELECTRICIAN_TRIGGER_ITEM = new ItemStackBuilder(Material.TRIPWIRE_HOOK)
             .setName("§cCoupe le courant")
-            .setLore("§7Vous permez de couper","§7le courant pendant "+TIMER_ELECTRICIAN+" secondes!")
+            .setLore("§7Vous permet de couper","§7le courant pendant "+TIMER_ELECTRICIAN+" secondes!")
             .addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,1)
             .hideAttributes()
             .toItemStack();

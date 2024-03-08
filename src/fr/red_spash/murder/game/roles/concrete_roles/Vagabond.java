@@ -14,13 +14,13 @@ public class Vagabond extends Innocent{
 
     public static final ItemStack VAGABOND_TELEPORT_BEACON = new ItemStackBuilder(Material.BEACON)
             .setName("§cPlacer votre balise de téléportation")
-            .setLore("§7Vous permez de placer","§7la balise de téléportation")
+            .setLore("§7Vous permet de placer","§7la balise de téléportation")
             .addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,1)
             .hideAttributes()
             .toItemStack();
     public static final ItemStack VAGABOND_TELEPORT_ITEM = new ItemStackBuilder(Material.NETHER_STAR, TELEPORTATION_MAX_USE)
             .setName("§cSe téléporter à votre balise")
-            .setLore("§7Vous permez de vous","§7téléporter à votre balise.")
+            .setLore("§7Vous permet de vous","§7téléporter à votre balise.")
             .addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,1)
             .hideAttributes()
             .toItemStack();

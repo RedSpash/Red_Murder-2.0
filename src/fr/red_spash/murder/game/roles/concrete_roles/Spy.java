@@ -13,13 +13,13 @@ public class Spy extends Innocent{
     public static final int SPY_SLOT = 1;
     public static final ItemStack SPY_TRIGGER_ITEM_ENABLE = new ItemStackBuilder(Material.REDSTONE)
             .setName("§cSe rendre invisible")
-            .setLore("§7Vous permez d'être invisible")
+            .setLore("§7Vous permet d'être invisible")
             .addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,1)
             .hideAttributes()
             .toItemStack();
     public static final ItemStack SPY_TRIGGER_ITEM_DISABLE = new ItemStackBuilder(Material.GLOWSTONE_DUST)
             .setName("§cSe rendre visible")
-            .setLore("§7Vous permez d'être visible")
+            .setLore("§7Vous permet d'être visible")
             .addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,1)
             .hideAttributes()
             .toItemStack();
