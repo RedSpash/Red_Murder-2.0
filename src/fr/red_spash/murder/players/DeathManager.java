@@ -7,7 +7,7 @@ import fr.red_spash.murder.game.roles.concrete_roles.Ancient;
 import fr.red_spash.murder.game.roles.concrete_roles.Detective;
 import fr.red_spash.murder.game.roles.concrete_roles.Innocent;
 import fr.red_spash.murder.game.roles.concrete_roles.Murder;
-import fr.red_spash.murder.game.tasks.CooldownTask;
+import fr.red_spash.murder.game.tasks.cooldown.CooldownTask;
 import fr.red_spash.murder.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
@@ -112,7 +112,6 @@ public class DeathManager {
             p.setVelocity(p.getLocation().getDirection().multiply(-1.15).add(new Vector(0,0.3,0)));
             p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1, false, false, false));
             p.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 20*6, 4, false, false, false));
-            p.sendHurtAnimation(5);
             p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_HURT,1,1);
             p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP,1,1);
             p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT,1,1);

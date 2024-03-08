@@ -37,7 +37,7 @@ public class RedScoreBoard {
     public RedScoreBoard(){
         String title = net.md_5.bungee.api.ChatColor.of(new Color(255,0,0))+"§lMurder §4§lBETA TEST";
         this.board = Bukkit.getScoreboardManager().getNewScoreboard();
-        this.objective = board.registerNewObjective(title, Criteria.DUMMY,title);
+        this.objective = board.registerNewObjective(title, "dummy",title);
         this.objective.setDisplaySlot(DisplaySlot.SIDEBAR);
     }
 
