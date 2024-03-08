@@ -1,8 +1,7 @@
-package fr.red_spash.murder.game.tasks;
+package fr.red_spash.murder.game.tasks.cooldown;
 
 
 import fr.red_spash.murder.game.commands.Command;
-import fr.red_spash.murder.game.commands.MessageCommand;
 import fr.red_spash.murder.players.PlayerData;
 import fr.red_spash.murder.utils.Utils;
 import net.md_5.bungee.api.ChatMessageType;
