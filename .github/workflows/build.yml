@@ -29,4 +29,3 @@ jobs:
       - name: Run Checkstyle
         run: |
           java -jar checkstyle-10.12.3-all.jar -c google_checks.xml src/
-        continue-on-error: false
