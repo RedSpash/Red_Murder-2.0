@@ -24,19 +24,20 @@
                 <version>3.1.2</version>
                 <executions>
                     <execution>
+                        <id>validate</id>
                         <phase>validate</phase>
+                        <configuration>
+                            <configLocation>rinaorc_checks.xml</configLocation>
+                            <failsOnError>true</failsOnError>
+                            <failOnViolation>true</failOnViolation>
+                            <consoleOutput>true</consoleOutput>
+                            <violationSeverity>warning</violationSeverity>
+                        </configuration>
                         <goals>
                             <goal>check</goal>
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <configLocation>google_checks.xml</configLocation>
-                    <failsOnError>true</failsOnError>
-                    <failOnViolation>true</failOnViolation>
-                    <consoleOutput>true</consoleOutput>
-                    <violationSeverity>warning</violationSeverity>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
