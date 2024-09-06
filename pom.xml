@@ -32,7 +32,10 @@
                 </executions>
                 <configuration>
                     <configLocation>google_checks.xml</configLocation>
+                    <failsOnError>true</failsOnError>
                     <failOnViolation>true</failOnViolation>
+                    <consoleOutput>true</consoleOutput>
+                    <violationSeverity>warning</violationSeverity>
                 </configuration>
             </plugin>
             <plugin>
