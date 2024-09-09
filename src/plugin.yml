@@ -2,6 +2,7 @@ name: Red_Murder
 api-version: "1.20"
 version: 1.0
 authors: [Red_Spash]
+depend: [ProtocolLib]
 main: fr.red_spash.murder.Murder
 description: §cMurder §6par §6§l@Red_Spash
 commands:
@@ -10,4 +11,4 @@ commands:
   saveWorld:
   start:
   teleportTo:
-
+  muteVocal:
